@@ -7,7 +7,7 @@ function Home() {
 
   return (
     <div className="home-page">
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div className="home-page__header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" , fontFamily: 'inter'}}>
         <h1>Books</h1>
         <button onClick={() => setIsModalOpen(true)}>+ Add New Book</button>
       </div>

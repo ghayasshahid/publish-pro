@@ -23,7 +23,6 @@ function BookDetail() {
     queryFn: () => apiFetch(`/api/books/${id}`),
   });
 
-
   const deleteBookMutation = useMutation({
     mutationFn: () =>
       apiFetch(`/api/books/${id}`, {
@@ -34,7 +33,6 @@ function BookDetail() {
       navigate("/home");
     },
   });
-
 
   const updateBookMutation = useMutation({
     mutationFn: (updatedFields: Partial<Book>) =>
@@ -53,7 +51,6 @@ function BookDetail() {
     setIsDownloading(true);
     setDownloadError("");
     try {
-
       const fileName = `${book.title}.pdf`;
       await downloadBookFile(book._id, fileName);
     } catch (err) {
@@ -102,13 +99,22 @@ function BookDetail() {
         {!isEditing ? (
           <>
             <h1>{data.title}</h1>
-            <p>by {data.author}</p>
-            <p>${data.price}</p>
-            <p>ISBN: {data.isbn}</p>
-            <p>Stock: {data.stock}</p>
-            <p>Category: {data.category}</p>
-            <p>{data.description}</p>
-            <p>{data.isAvailable ? "Available" : "Not Available"}</p>
+            <p className="book-detail__author">by {data.author}</p>
+            <p className="book-detail__price">${data.price}</p>
+            <p>
+              <strong>ISBN:</strong> {data.isbn}
+            </p>
+            <p>
+              <strong>Stock:</strong> {data.stock}
+            </p>
+            <p>
+              <strong>Category:</strong> {data.category}
+            </p>
+            <p className="book-detail__description">{data.description}</p>
+            <p>
+              <strong>Status:</strong>{" "}
+              {data.isAvailable ? "Available" : "Not Available"}
+            </p>
 
             {(deleteBookMutation.isError ||
               updateBookMutation.isError ||
@@ -120,66 +126,37 @@ function BookDetail() {
               </p>
             )}
 
-            <div style={{ display: "flex", gap: "10px", marginTop: "16px" }}>
+            <div className="book-detail__actions">
               <button
+                className="book-detail__btn book-detail__btn--download"
                 onClick={() => handleDownload(data)}
                 disabled={isDownloading}
-                style={{
-                  backgroundColor: "#28a745",
-                  color: "white",
-                  border: "none",
-                  padding: "8px 16px",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                }}
               >
                 {isDownloading ? "Downloading..." : "Download Book"}
               </button>
 
               <button
+                className="book-detail__btn book-detail__btn--edit"
                 onClick={() => handleStartEdit(data)}
-                style={{
-                  backgroundColor: "#007bff",
-                  color: "white",
-                  border: "none",
-                  padding: "8px 16px",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                }}
               >
                 Edit Book
               </button>
 
               <button
+                className="book-detail__btn book-detail__btn--delete"
                 onClick={handleDelete}
                 disabled={deleteBookMutation.isPending}
-                style={{
-                  backgroundColor: "#dc3545",
-                  color: "white",
-                  border: "none",
-                  padding: "8px 16px",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                }}
               >
                 {deleteBookMutation.isPending ? "Deleting..." : "Delete Book"}
               </button>
             </div>
           </>
         ) : (
-          <form
-            onSubmit={handleUpdateSubmit}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "12px",
-              maxWidth: "400px",
-            }}
-          >
+          <form className="book-detail__form" onSubmit={handleUpdateSubmit}>
             <h2>Edit Book</h2>
 
-            <label>
-              Title:
+            <div className="form-group">
+              <label>Title</label>
               <input
                 type="text"
                 value={formData.title || ""}
@@ -188,10 +165,10 @@ function BookDetail() {
                 }
                 required
               />
-            </label>
+            </div>
 
-            <label>
-              Author:
+            <div className="form-group">
+              <label>Author</label>
               <input
                 type="text"
                 value={formData.author || ""}
@@ -200,10 +177,10 @@ function BookDetail() {
                 }
                 required
               />
-            </label>
+            </div>
 
-            <label>
-              Price ($):
+            <div className="form-group">
+              <label>Price ($)</label>
               <input
                 type="number"
                 value={formData.price ?? ""}
@@ -213,10 +190,10 @@ function BookDetail() {
                 required
                 min="0"
               />
-            </label>
+            </div>
 
-            <label>
-              Stock:
+            <div className="form-group">
+              <label>Stock</label>
               <input
                 type="number"
                 value={formData.stock ?? ""}
@@ -226,10 +203,10 @@ function BookDetail() {
                 required
                 min="0"
               />
-            </label>
+            </div>
 
-            <label>
-              Category:
+            <div className="form-group">
+              <label>Category</label>
               <select
                 value={formData.category || "Fiction"}
                 onChange={(e) =>
@@ -245,10 +222,10 @@ function BookDetail() {
                 <option value="Biography">Biography</option>
                 <option value="Self-Help">Self-Help</option>
               </select>
-            </label>
+            </div>
 
-            <label>
-              Description:
+            <div className="form-group">
+              <label>Description</label>
               <textarea
                 value={formData.description || ""}
                 onChange={(e) =>
@@ -256,17 +233,25 @@ function BookDetail() {
                 }
                 rows={3}
               />
-            </label>
+            </div>
 
             {updateBookMutation.isError && (
               <p style={{ color: "red" }}>{updateBookMutation.error.message}</p>
             )}
 
-            <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
-              <button type="submit" disabled={updateBookMutation.isPending}>
+            <div className="book-detail__form-actions">
+              <button
+                type="submit"
+                className="book-detail__btn book-detail__btn--save"
+                disabled={updateBookMutation.isPending}
+              >
                 {updateBookMutation.isPending ? "Saving..." : "Save Changes"}
               </button>
-              <button type="button" onClick={() => setIsEditing(false)}>
+              <button
+                type="button"
+                className="book-detail__btn book-detail__btn--cancel"
+                onClick={() => setIsEditing(false)}
+              >
                 Cancel
               </button>
             </div>

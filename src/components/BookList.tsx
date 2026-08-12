@@ -12,13 +12,14 @@ function BookList() {
   const { data, isLoading, isFetching, error } = useQuery<BookListResponse>({
     queryKey: ["books", page, search, category],
     queryFn: () => {
-      const params = new URLSearchParams({ page: String(page), limit: "10" });
+      const params = new URLSearchParams({ page: String(page), limit: "9" });
       if (search) params.append("search", search);
       if (category) params.append("category", category);
       return apiFetch(`/api/books?${params.toString()}`);
     },
   });
 
+  
   return (
     <div className="book-list">
       <div className="book-list__filters">
@@ -72,7 +73,7 @@ function BookList() {
                 className="book-card"
               >
                 <h3>{book.title}</h3>
-                <p>{book.author}</p>
+                <p>By {book.author}</p>
                 <p>${book.price}</p>
               </Link>
             ))}
@@ -84,7 +85,7 @@ function BookList() {
             <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
               Previous
             </button>
-            <span>
+            <span style={{ margin: "0 10px" , fontFamily: "inter, sans-serif"}}>
               Page {data?.page} of {data?.pages}
             </span>
             <button

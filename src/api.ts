@@ -3,7 +3,7 @@ const BASE_URL = "https://riot-reacquire-unstylish.ngrok-free.dev";
 export async function apiFetch(path: string, options: RequestInit = {}) {
   const token = localStorage.getItem("token");
 
-  // Check if the payload is FormData
+  
   const isFormData = options.body instanceof FormData;
 
   const headers: Record<string, string> = {
