@@ -29,16 +29,18 @@ function SignUp() {
       setError("Passwords do not match");
       return;
     }
-    
+
     setIsLoading(true);
 
     try {
-      const res = await fetch("https://riot-reacquire-unstylish.ngrok-free.dev/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
-      });
-      
+      const res = await fetch(
+        "https://riot-reacquire-unstylish.ngrok-free.dev/api/auth/register",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password }),
+        },
+      );
 
       if (!res.ok) {
         const errorData = await res.json();
@@ -52,7 +54,7 @@ function SignUp() {
       setIsLoading(false);
     }
   }
-  
+
   return (
     <>
       <form className="login-form" onSubmit={handleFormSubmit}>

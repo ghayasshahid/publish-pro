@@ -14,7 +14,7 @@ const initialState: AppState = { token: localStorage.getItem("token") };
 const reducer = (state = initialState, action: Action): AppState => {
   switch (action.type) {
     case "SET_TOKEN":
-      return { ...state, token: action.payload ?? state.token };
+      return { ...state, token: action.payload};
     case "CLEAR_TOKEN":
       return { ...state, token: null };
     default:
