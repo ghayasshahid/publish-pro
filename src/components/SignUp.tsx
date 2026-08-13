@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { validateEmail, validatePassword } from "../utils/validation";
 
 function SignUp() {
   const navigate = useNavigate();
@@ -24,6 +25,16 @@ function SignUp() {
   async function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
+
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      setError("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.");
+      return;
+    }
 
     if (password !== confirmPassword) {
       setError("Passwords do not match");

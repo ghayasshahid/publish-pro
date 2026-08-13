@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { validateEmail, validatePassword } from "../utils/validation";
 
 interface LoginResponse {
   message: string;
@@ -28,6 +29,18 @@ function LoginPage() {
     e.preventDefault();
     setIsLoading(true);
     setError("");
+
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email address.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      setError("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.");
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const res = await fetch("https://riot-reacquire-unstylish.ngrok-free.dev/api/auth/login", {

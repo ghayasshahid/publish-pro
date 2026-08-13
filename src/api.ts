@@ -3,18 +3,18 @@ const BASE_URL = "https://riot-reacquire-unstylish.ngrok-free.dev";
 export async function apiFetch(path: string, options: RequestInit = {}) {
   const token = localStorage.getItem("token");
 
-  
   const isFormData = options.body instanceof FormData;
 
   const headers: Record<string, string> = {
     "ngrok-skip-browser-warning": "true",
-    ...(options.headers as Record<string, string> || {}),
+    ...((options.headers as Record<string, string>) || {}),
   };
 
   if (!isFormData && !headers["Content-Type"]) {
     headers["Content-Type"] = "application/json";
   }
 
+  
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
@@ -33,8 +33,10 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
   return res.json();
 }
 
-
-export async function downloadBookFile(bookId: string, defaultFileName: string) {
+export async function downloadBookFile(
+  bookId: string,
+  defaultFileName: string,
+) {
   const token = localStorage.getItem("token");
 
   const res = await fetch(`${BASE_URL}/api/books/${bookId}/download`, {
@@ -51,12 +53,9 @@ export async function downloadBookFile(bookId: string, defaultFileName: string) 
     throw new Error(errorData.message || `Download failed (${res.status})`);
   }
 
-
   const blob = await res.blob();
 
-
   const url = window.URL.createObjectURL(blob);
-
 
   const link = document.createElement("a");
   link.href = url;
