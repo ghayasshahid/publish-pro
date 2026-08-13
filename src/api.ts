@@ -1,6 +1,6 @@
 const BASE_URL = "https://riot-reacquire-unstylish.ngrok-free.dev";
 
-export async function apiFetch(path: string, options: RequestInit = {}) {
+export async function apiFetch<T>(path: string, options: RequestInit = {}, retry = true): Promise<T> {
   const token = localStorage.getItem("token");
 
   const isFormData = options.body instanceof FormData;
@@ -14,7 +14,6 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
     headers["Content-Type"] = "application/json";
   }
 
-  
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
@@ -25,12 +24,41 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
     credentials: "include",
   });
 
+  if (res.status === 401 && retry) {
+    const newToken = await refreshToken();
+    if (newToken) {
+      return apiFetch<T>(path, options, false); // Retry once
+    }
+  }
+
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}));
     throw new Error(errorData.message || `Request failed (${res.status})`);
   }
 
-  return res.json();
+  return res.json() as Promise<T>;
+}
+
+async function refreshToken(): Promise<string | null> {
+  try {
+    const res = await fetch(`${BASE_URL}/api/auth/refresh`, {
+      method: "POST",
+      credentials: "include", // Assuming refresh token is in a cookie or managed by server
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to refresh token");
+    }
+
+    const data = await res.json();
+    const newToken = data.accessToken;
+    localStorage.setItem("token", newToken);
+    return newToken;
+  } catch {
+    localStorage.removeItem("token");
+    window.location.href = "/";
+    return null;
+  }
 }
 
 export async function downloadBookFile(
