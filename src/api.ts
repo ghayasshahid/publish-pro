@@ -1,4 +1,4 @@
-const BASE_URL = "https://riot-reacquire-unstylish.ngrok-free.dev";
+const BASE_URL = "http://localhost:3000";
 
 export async function apiFetch<T>(path: string, options: RequestInit = {}, retry = true): Promise<T> {
   const token = localStorage.getItem("token");
