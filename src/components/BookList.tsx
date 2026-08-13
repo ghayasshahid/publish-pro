@@ -9,7 +9,7 @@ function BookList() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
 
-  const { data, isLoading, isFetching, error } = useQuery<BookListResponse>({
+  const { data, isLoading, error } = useQuery<BookListResponse>({
     queryKey: ["books", page, search, category],
     queryFn: () => {
       const params = new URLSearchParams({ page: String(page), limit: "9" });
@@ -19,7 +19,7 @@ function BookList() {
     },
   });
 
-  
+
   return (
     <div className="book-list">
       <div className="book-list__filters">
@@ -50,9 +50,6 @@ function BookList() {
           <option value="Biography">Biography</option>
           <option value="Self-Help">Self-Help</option>
         </select>
-        {isFetching && (
-          <p style={{ marginLeft: "10px" }}>Searching...</p>
-        )}
       </div>
 
       {error && (

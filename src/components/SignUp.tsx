@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { validateEmail, validatePassword } from "../utils/validation";
+import { apiFetch } from "../api";
 
 function SignUp() {
   const navigate = useNavigate();
@@ -44,19 +45,10 @@ function SignUp() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(
-        "https://riot-reacquire-unstylish.ngrok-free.dev/api/auth/register",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, password }),
-        },
-      );
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Registration failed");
-      }
+      await apiFetch("/api/auth/register", {
+        method: "POST",
+        body: JSON.stringify({ name, email, password }),
+      });
 
       navigate("/");
     } catch (err) {

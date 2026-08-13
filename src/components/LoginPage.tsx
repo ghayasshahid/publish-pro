@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { validateEmail, validatePassword } from "../utils/validation";
+import { apiFetch } from "../api";
 
 interface LoginResponse {
   message: string;
@@ -43,19 +44,10 @@ function LoginPage() {
     }
 
     try {
-      const res = await fetch("https://riot-reacquire-unstylish.ngrok-free.dev/api/auth/login", {
+      const data = await apiFetch<LoginResponse>("/api/auth/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify({ email, password }),
       });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Login failed");
-      }
-
-      const data: LoginResponse = await res.json();
 
       dispatch({ type: "SET_TOKEN", payload: data.accessToken });
       localStorage.setItem("token", data.accessToken);
