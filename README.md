@@ -1,75 +1,56 @@
-# React + TypeScript + Vite
+# Bookstore Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A professional-grade, reactive bookstore management application built with React, TypeScript, and Vite. This application facilitates seamless interaction with the backend API for secure user authentication, book management, and file operations.
 
-Currently, two official plugins are available:
+## 🚀 Key Technologies & Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Framework:** [React 19](https://react.dev/) with TypeScript for type-safe, maintainable UI components.
+- **Build Tool:** [Vite](https://vite.dev/) for lightning-fast development and optimized production builds.
+- **State Management:** [Redux](https://redux.js.org/) for global state and [TanStack React Query](https://tanstack.com/query/latest) for efficient server-state management.
+- **Styling:** [SCSS (Sass)](https://sass-lang.com/) for structured, modular, and maintainable CSS architectures.
+- **Routing:** [React Router v7](https://reactrouter.com/) for declarative, nested navigation.
+- **API Communication:** Custom wrapper around the native `fetch` API for robust, authorized, and error-handled communication.
 
-## React Compiler
+## 🏗️ Architectural Overview
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The application follows a clean, component-based architecture:
 
-## Expanding the ESLint configuration
+- **`/src/components`**: Modular UI components organized by functional complexity (atoms/molecules/organisms).
+- **`/src/api.ts`**: Centralized API service layer handling authentication tokens, cross-origin communication, and token refresh logic.
+- **`/src/styles`**: Global and component-specific SCSS files utilizing the `@use` directive for modular styling.
+- **`/src/utils`**: Reusable helper functions (e.g., input validation).
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🛠️ Project Setup
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Prerequisites
+- Node.js (v20+)
+- npm
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Clone the repository:
+   ```bash
+   git clone <your-repo-url>
+   cd bookstore-frontend
+   ```
 
-```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## ⚙️ Key Functional Features
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **Robust Authentication:** Secure login/signup process with automatic JWT token management.
+- **Token Refreshing:** Seamless background token renewal mechanism.
+- **Dynamic Book Management:** CRUD operations on book inventory, including file uploads and downloads.
+- **State Optimization:** Intelligent caching and refetching policies managed by React Query.
+- **Standardized Design:** Uniform typography utilizing the 'Inter' font across all components for a professional aesthetic.
 
-```
+## 📄 License
+This project is proprietary and confidential.
