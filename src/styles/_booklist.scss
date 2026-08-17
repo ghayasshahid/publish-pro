@@ -1,12 +1,19 @@
+@use './variables' as var;
+
 .book-list {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  padding: 0 16px;
 
   &__filters {
     display: flex;
+    flex-direction: column;
     gap: 12px;
-    align-items: center;
+
+    @media (min-width: var.$breakpoint-md) {
+      flex-direction: row;
+    }
 
     input, select {
       padding: 8px 12px;
@@ -22,8 +29,16 @@
 
   &__grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr;
     gap: 16px;
+
+    @media (min-width: var.$breakpoint-sm) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: var.$breakpoint-md) {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 
   &__pagination {
@@ -31,6 +46,7 @@
     justify-content: center;
     align-items: center;
     gap: 16px;
+    padding-bottom: 24px;
 
     button {
       padding: 8px 16px;
