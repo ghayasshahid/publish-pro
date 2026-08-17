@@ -9,7 +9,7 @@ export async function apiFetch<T>(path: string, options: RequestInit = {}, retry
     "ngrok-skip-browser-warning": "true",
     ...((options.headers as Record<string, string>) || {}),
   };
-
+  
   if (!isFormData && !headers["Content-Type"]) {
     headers["Content-Type"] = "application/json";
   }
@@ -27,7 +27,7 @@ export async function apiFetch<T>(path: string, options: RequestInit = {}, retry
   if (res.status === 401 && retry) {
     const newToken = await refreshToken();
     if (newToken) {
-      return apiFetch<T>(path, options, false); // Retry once
+      return apiFetch<T>(path, options, false); 
     }
   }
 
