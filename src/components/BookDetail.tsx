@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import { api, downloadBookFile } from "../api";
+import { useAlert } from "../context/AlertContext";
 import type { BookDetailResponse, Book } from "../types";
 
 function isFullBook(book: BookDetailResponse): book is Book {
@@ -12,6 +13,7 @@ function BookDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { showConfirm } = useAlert();
 
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Partial<Book>>({});
@@ -55,9 +57,9 @@ function BookDetail() {
   };
 
   const handleDelete = () => {
-    if (window.confirm("Are you sure you want to delete this book?")) {
+    showConfirm("Are you sure you want to delete this book?", () => {
       deleteBookMutation.mutate();
-    }
+    });
   };
 
   const handleStartEdit = (book: Book) => {
