@@ -2,16 +2,14 @@ import axios, { type InternalAxiosRequestConfig } from "axios";
 
 const BASE_URL = "http://localhost:3000";
 
-// Create an Axios instance
+
 const api = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,
-  headers: {
-    "ngrok-skip-browser-warning": "true",
-  },
+
 });
 
-// Request interceptor to add the Bearer token
+
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = localStorage.getItem("token");
   if (token && config.headers) {
@@ -42,7 +40,7 @@ api.interceptors.response.use(
     
     // Transform axios error to match previous behavior if needed, 
     // but usually throwing the error is fine.
-    const message = error.response?.data?.message || error.message || "Request failed";
+    const message = error.response.data.message || error.message || "Request failed";
     return Promise.reject(new Error(message));
   }
 );
@@ -63,31 +61,7 @@ async function refreshToken(): Promise<string | null> {
   }
 }
 
-/**
- * Compatibility wrapper to replace the old fetch-based apiFetch.
- */
-export async function apiFetch<T>(path: string, options: any = {}): Promise<T> {
-  const { method = "GET", body, headers } = options;
-
-  let data = body;
-  // If body is a string, try to parse it as JSON for Axios
-  if (typeof body === "string") {
-    try {
-      data = JSON.parse(body);
-    } catch {
-      // Not JSON, leave as is (e.g. plain text or already handled)
-    }
-  }
-
-  const response = await api({
-    url: path,
-    method,
-    data,
-    headers,
-  });
-
-  return response.data;
-}
+export { api };
 
 /**
  * Downloads a book file using Axios.

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
-import { apiFetch, downloadBookFile } from "../api";
+import { api, downloadBookFile } from "../api";
 import type { BookDetailResponse, Book } from "../types";
 
 function isFullBook(book: BookDetailResponse): book is Book {
@@ -20,14 +20,11 @@ function BookDetail() {
 
   const { data, isLoading, error } = useQuery<BookDetailResponse>({
     queryKey: ["book", id],
-    queryFn: () => apiFetch(`/api/books/${id}`),
+    queryFn: () => api.get(`/api/books/${id}`).then((res) => res.data),
   });
 
   const deleteBookMutation = useMutation({
-    mutationFn: () =>
-      apiFetch(`/api/books/${id}`, {
-        method: "DELETE",
-      }),
+    mutationFn: () => api.delete(`/api/books/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["books"] });
       navigate("/home");
@@ -36,10 +33,7 @@ function BookDetail() {
 
   const updateBookMutation = useMutation({
     mutationFn: (updatedFields: Partial<Book>) =>
-      apiFetch(`/api/books/${id}`, {
-        method: "PUT",
-        body: JSON.stringify(updatedFields),
-      }),
+      api.put(`/api/books/${id}`, updatedFields),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["book", id] });
       queryClient.invalidateQueries({ queryKey: ["books"] });

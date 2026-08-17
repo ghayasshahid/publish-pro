@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiFetch } from "../api";
+import { api } from "../api";
 
 interface CreateBookModalProps {
   onClose: () => void;
@@ -19,11 +19,7 @@ export default function CreateBookModal({ onClose }: CreateBookModalProps) {
   const [file, setFile] = useState<File | null>(null);
 
   const createBookMutation = useMutation({
-    mutationFn: (formData: FormData) =>
-      apiFetch("/api/books", {
-        method: "POST",
-        body: formData,
-      }),
+    mutationFn: (formData: FormData) => api.post("/api/books", formData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["books"] });
       onClose();

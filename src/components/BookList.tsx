@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { apiFetch } from "../api";
+import { api } from "../api";
 import type { BookListResponse } from "../types";
 import { Link } from "react-router-dom";
 
@@ -15,10 +15,9 @@ function BookList() {
       const params = new URLSearchParams({ page: String(page), limit: "9" });
       if (search) params.append("search", search);
       if (category) params.append("category", category);
-      return apiFetch(`/api/books?${params.toString()}`);
+      return api.get(`/api/books?${params.toString()}`).then((res) => res.data);
     },
   });
-
 
   return (
     <div className="book-list">
@@ -82,7 +81,9 @@ function BookList() {
             <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
               Previous
             </button>
-            <span style={{ margin: "0 10px" , fontFamily: "inter, sans-serif"}}>
+            <span
+              style={{ margin: "0 10px", fontFamily: "inter, sans-serif" }}
+            >
               Page {data?.page} of {data?.pages}
             </span>
             <button

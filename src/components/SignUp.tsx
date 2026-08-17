@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { validateEmail, validatePassword } from "../utils/validation";
-import { apiFetch } from "../api";
+import { api } from "../api";
 
 function SignUp() {
   const navigate = useNavigate();
@@ -45,11 +45,7 @@ function SignUp() {
     setIsLoading(true);
 
     try {
-      await apiFetch("/api/auth/register", {
-        method: "POST",
-        body: JSON.stringify({ name, email, password }),
-      });
-
+      await api.post("/api/auth/register", { name, email, password });
       navigate("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");

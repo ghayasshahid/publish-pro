@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { validateEmail, validatePassword } from "../utils/validation";
-import { apiFetch } from "../api";
+import { api } from "../api";
 
 interface LoginResponse {
   message: string;
@@ -44,19 +44,18 @@ function LoginPage() {
     }
 
     try {
-      const data = await apiFetch<LoginResponse>("/api/auth/login", {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
+      const response = await api.post<LoginResponse>("/api/auth/login", {
+        email,
+        password,
       });
 
-      dispatch({ type: "SET_TOKEN", payload: data.accessToken });
-      localStorage.setItem("token", data.accessToken);
+      dispatch({ type: "SET_TOKEN", payload: response.data.accessToken });
+      localStorage.setItem("token", response.data.accessToken);
       navigate("/home");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
       setIsLoading(false);
-      
     }
   };
 
@@ -67,9 +66,7 @@ function LoginPage() {
           <h1 className="login-form__title">Login</h1>
 
           <div className="login-form__input-container">
-            <label  className="login-form__label">
-              Email
-            </label>
+            <label className="login-form__label">Email</label>
             <input
               type="email"
               id="email"
@@ -83,9 +80,7 @@ function LoginPage() {
           </div>
 
           <div className="login-form__input-container">
-            <label className="login-form__label">
-              Password
-            </label>
+            <label className="login-form__label">Password</label>
             <input
               type="password"
               id="password"
