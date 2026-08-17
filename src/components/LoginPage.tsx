@@ -1,9 +1,8 @@
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { validateEmail, validatePassword } from "../utils/validation";
 import { api } from "../api";
+import { useAuth } from "../hooks/useAuth";
 
 interface LoginResponse {
   message: string;
@@ -18,7 +17,7 @@ interface LoginResponse {
 }
 
 function LoginPage() {
-  const dispatch = useDispatch();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -49,8 +48,7 @@ function LoginPage() {
         password,
       });
 
-      dispatch({ type: "SET_TOKEN", payload: response.data.accessToken });
-      localStorage.setItem("token", response.data.accessToken);
+      login(response.data.accessToken);
       navigate("/home");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
