@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../api";
+import { useAlert } from "../context/AlertContext";
 
 interface CreateBookModalProps {
   onClose: () => void;
@@ -8,6 +9,7 @@ interface CreateBookModalProps {
 
 export default function CreateBookModal({ onClose }: CreateBookModalProps) {
   const queryClient = useQueryClient();
+  const { showAlert } = useAlert();
 
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -30,7 +32,7 @@ export default function CreateBookModal({ onClose }: CreateBookModalProps) {
     e.preventDefault();
 
     if (!file) {
-      alert("Please select a book file to upload.");
+      showAlert("Please select a book file to upload.");
       return;
     }
 

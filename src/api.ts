@@ -2,13 +2,10 @@ import axios, { type InternalAxiosRequestConfig } from "axios";
 
 const BASE_URL = "http://localhost:3000";
 
-
 const api = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,
-
 });
-
 
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = localStorage.getItem("token");
@@ -18,14 +15,12 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   return config;
 });
 
-// Response interceptor to handle 401s and automatic token refresh
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // If 401 and not already retrying
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
         const newToken = await refreshToken();
@@ -37,20 +32,20 @@ api.interceptors.response.use(
         return Promise.reject(refreshError);
       }
     }
-    
-    // Transform axios error to match previous behavior if needed, 
-    // but usually throwing the error is fine.
-    const message = error.response.data.message || error.message || "Request failed";
+
+    const message =
+      error.response.data.message || error.message || "Request failed";
     return Promise.reject(new Error(message));
-  }
+  },
 );
 
-/**
- * Refreshes the access token using the refresh token cookie.
- */
 async function refreshToken(): Promise<string | null> {
   try {
-    const res = await axios.post(`${BASE_URL}/api/auth/refresh`, {}, { withCredentials: true });
+    const res = await axios.post(
+      `${BASE_URL}/api/auth/refresh`,
+      {},
+      { withCredentials: true },
+    );
     const newToken = res.data.accessToken;
     localStorage.setItem("token", newToken);
     return newToken;
@@ -63,9 +58,6 @@ async function refreshToken(): Promise<string | null> {
 
 export { api };
 
-/**
- * Downloads a book file using Axios.
- */
 export async function downloadBookFile(
   bookId: string,
   defaultFileName: string,
@@ -79,7 +71,6 @@ export async function downloadBookFile(
     const link = document.createElement("a");
     link.href = url;
     link.download = defaultFileName;
-    document.body.appendChild(link);
     link.click();
     link.remove();
     window.URL.revokeObjectURL(url);
@@ -88,3 +79,4 @@ export async function downloadBookFile(
     throw new Error(message);
   }
 }
+
