@@ -7,9 +7,11 @@ function LogoutButton() {
 
   return (
     <header className="header">
-      <button onClick={logout} className="logout-btn">
-        Logout
-      </button>
+      <div className="container">
+        <button onClick={logout} className="logout-btn">
+          Logout
+        </button>
+      </div>
     </header>
   );
 }
