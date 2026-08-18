@@ -6,9 +6,10 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
-  margin: 10px;
+}
 
-  &:hover {
-    background-color: #c82333;
-  }
+.header {
+  padding: 16px;
+  display: flex;
+  justify-content: flex-end; // Push button to the right
 }

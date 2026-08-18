@@ -6,9 +6,11 @@ function LogoutButton() {
   if (!isAuthenticated) return null;
 
   return (
-    <button onClick={logout} className="logout-btn">
-      Logout
-    </button>
+    <header className="header">
+      <button onClick={logout} className="logout-btn">
+        Logout
+      </button>
+    </header>
   );
 }
 
