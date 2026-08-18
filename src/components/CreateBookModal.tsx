@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../api";
-import { useAlert } from "../context/AlertContext";
+import { Modal } from "./Modal";
 
 interface CreateBookModalProps {
   onClose: () => void;
@@ -9,7 +9,6 @@ interface CreateBookModalProps {
 
 export default function CreateBookModal({ onClose }: CreateBookModalProps) {
   const queryClient = useQueryClient();
-  const { showAlert } = useAlert();
 
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -19,6 +18,11 @@ export default function CreateBookModal({ onClose }: CreateBookModalProps) {
   const [category, setCategory] = useState("Fiction");
   const [description, setDescription] = useState("");
   const [file, setFile] = useState<File | null>(null);
+
+  const [alert, setAlert] = useState<{ isOpen: boolean; message: string }>({
+    isOpen: false,
+    message: "",
+  });
 
   const createBookMutation = useMutation({
     mutationFn: (formData: FormData) => api.post("/api/books", formData),
@@ -32,7 +36,7 @@ export default function CreateBookModal({ onClose }: CreateBookModalProps) {
     e.preventDefault();
 
     if (!file) {
-      showAlert("Please select a book file to upload.");
+      setAlert({ isOpen: true, message: "Please select a book file to upload." });
       return;
     }
 
@@ -169,6 +173,13 @@ export default function CreateBookModal({ onClose }: CreateBookModalProps) {
           </div>
         </form>
       </div>
+
+      <Modal
+        isOpen={alert.isOpen}
+        message={alert.message}
+        onClose={() => setAlert({ isOpen: false, message: "" })}
+        type="alert"
+      />
     </div>
   );
 }
