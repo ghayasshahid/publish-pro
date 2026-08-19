@@ -9,7 +9,7 @@
 @use './booklist';
 @use './login-signup';
 @use './logout';
-...
+
 /* Global styles */
 * {
   font-family: 'Inter', sans-serif;
@@ -22,6 +22,13 @@ body {
   font-size: 16px;
   line-height: 1.5;
   color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+  width: 100%;
 }
 
 h1, h2, h3 {

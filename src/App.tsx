@@ -10,14 +10,16 @@ function App() {
   return (
     <>
       <LogoutButton />
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route element={<ProtectedRoute />}>
-          <Route path="/home" element={<Home />} />
-          <Route path="/books/:id" element={<BookDetail />} />
-        </Route>
-      </Routes>
+      <div className="container">
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/books/:id" element={<BookDetail />} />
+          </Route>
+        </Routes>
+      </div>
     </>
   );
 }
