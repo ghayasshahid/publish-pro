@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @use './variables';
 @use './bookdetail';
 @use './createbook-modal';
@@ -5,7 +9,7 @@
 @use './booklist';
 @use './login-signup';
 @use './logout';
-
+...
 /* Global styles */
 * {
   font-family: 'Inter', sans-serif;
