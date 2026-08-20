@@ -33,7 +33,9 @@ function SignUp() {
     }
 
     if (!validatePassword(password)) {
-      setError("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.");
+      setError(
+        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number."
+      );
       return;
     }
 
@@ -55,86 +57,97 @@ function SignUp() {
   }
 
   return (
-    <>
-      <form className="login-form" onSubmit={handleFormSubmit}>
-        <div className="login-form__container">
-          <h1 className="login-form__title">Sign Up</h1>
-          <div className="login-form__input-container">
-            <label htmlFor="name" className="login-form__label">
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              className="login-form__input"
-              placeholder="Enter your name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </div>
-          <div className="login-form__input-container">
-            <label htmlFor="email" className="login-form__label">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className="login-form__input"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="login-form__input-container">
-            <label htmlFor="password" className="login-form__label">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="login-form__input"
-              placeholder="Enter your password"
-              required
-            />
-          </div>
-          <div className="login-form__input-container">
-            <label htmlFor="confirmPassword" className="login-form__label">
-              Confirm Password
-            </label>
-            <input
-              value={confirmPassword}
-              onChange={handleConfirmPasswordChange}
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              className="login-form__input"
-              placeholder="Confirm your password"
-              required
-            />
-          </div>
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          <button
-            type="submit"
-            className="login-form__submit-button"
-            disabled={isLoading}
+    <div className="flex justify-center items-center min-h-screen bg-[#f5f5f5] p-[16px] box-border">
+      <form
+        className="bg-white p-[32px] rounded-[8px] shadow-[0_4px_12px_rgba(0,0,0,0.1)] w-full max-w-[400px] flex flex-col gap-[16px] box-border"
+        onSubmit={handleFormSubmit}
+      >
+        <h1 className="m-0 text-[24px] text-center font-normal">Sign Up</h1>
+
+        <div className="flex flex-col gap-[6px]">
+          <label htmlFor="name" className="text-[14px] font-semibold">
+            Name
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            className="p-[10px] border border-[#ccc] rounded-[4px] text-[14px] outline-none focus:outline-none focus:border-[#007bff] box-border"
+            placeholder="Enter your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="flex flex-col gap-[6px]">
+          <label htmlFor="email" className="text-[14px] font-semibold">
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            className="p-[10px] border border-[#ccc] rounded-[4px] text-[14px] outline-none focus:outline-none focus:border-[#007bff] box-border"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="flex flex-col gap-[6px]">
+          <label htmlFor="password" className="text-[14px] font-semibold">
+            Password
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="p-[10px] border border-[#ccc] rounded-[4px] text-[14px] outline-none focus:outline-none focus:border-[#007bff] box-border"
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+
+        <div className="flex flex-col gap-[6px]">
+          <label htmlFor="confirmPassword" className="text-[14px] font-semibold">
+            Confirm Password
+          </label>
+          <input
+            value={confirmPassword}
+            onChange={handleConfirmPasswordChange}
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            className="p-[10px] border border-[#ccc] rounded-[4px] text-[14px] outline-none focus:outline-none focus:border-[#007bff] box-border"
+            placeholder="Confirm your password"
+            required
+          />
+        </div>
+
+        {error && <p className="text-red-500 text-[14px] m-0">{error}</p>}
+
+        <button
+          type="submit"
+          className="p-[12px] bg-[#007bff] text-white border-0 rounded-[4px] text-[16px] cursor-pointer disabled:bg-[#ccc] disabled:cursor-not-allowed transition-colors"
+          disabled={isLoading}
+        >
+          {isLoading ? "Registering..." : "Register"}
+        </button>
+
+        <div className="text-center">
+          <Link
+            to="/"
+            className="text-[#007bff] text-[14px] no-underline hover:underline"
           >
-            {isLoading ? "Registering..." : "Register"}
-          </button>
-          <div className="login-form__links">
-            <Link to="/" className="login-form__link">
-              Already have an account? Login
-            </Link>
-          </div>
+            Already have an account? Login
+          </Link>
         </div>
       </form>
-    </>
+    </div>
   );
 }
 

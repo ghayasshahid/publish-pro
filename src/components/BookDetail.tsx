@@ -18,7 +18,7 @@ function BookDetail() {
   const [formData, setFormData] = useState<Partial<Book>>({});
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState("");
-  
+
   const [confirm, setConfirm] = useState<{
     isOpen: boolean;
     message: string;
@@ -95,7 +95,7 @@ function BookDetail() {
   if (isLoading) return <p>Loading book...</p>;
   if (error) {
     return (
-      <p style={{ color: "red" }}>
+      <p className="text-red-500 text-sm">
         {error instanceof Error ? error.message : "Failed to load book"}
       </p>
     );
@@ -104,23 +104,23 @@ function BookDetail() {
 
   if (isFullBook(data)) {
     return (
-      <div className="book-detail">
+      <div className="max-w-[500px] my-[20px] mx-[16px] md:my-[40px] md:mx-auto p-[24px] border border-[#e0e0e0] rounded-[8px] bg-white shadow-[0_4px_12px_rgba(0,0,0,0.05)] box-border">
         {!isEditing ? (
           <>
-            <h1>{data.title}</h1>
-            <p className="book-detail__author">by {data.author}</p>
-            <p className="book-detail__price">${data.price}</p>
-            <p>
+            <h1 className="mt-0 mb-2 text-[24px] font-semibold">{data.title}</h1>
+            <p className="text-[#666666] text-[16px] mb-2">by {data.author}</p>
+            <p className="text-[18px] font-semibold text-[#28a745] mb-2">${data.price}</p>
+            <p className="mb-2">
               <strong>ISBN:</strong> {data.isbn}
             </p>
-            <p>
+            <p className="mb-2">
               <strong>Stock:</strong> {data.stock}
             </p>
-            <p>
+            <p className="mb-2">
               <strong>Category:</strong> {data.category}
             </p>
-            <p className="book-detail__description">{data.description}</p>
-            <p>
+            <p className="mb-2">{data.description}</p>
+            <p className="mb-2">
               <strong>Status:</strong>{" "}
               {data.isAvailable ? "Available" : "Not Available"}
             </p>
@@ -128,16 +128,16 @@ function BookDetail() {
             {(deleteBookMutation.isError ||
               updateBookMutation.isError ||
               downloadError) && (
-              <p style={{ color: "red" }}>
+              <p className="text-red-500 text-sm mt-2">
                 {deleteBookMutation.error?.message ||
                   updateBookMutation.error?.message ||
                   downloadError}
               </p>
             )}
 
-            <div className="book-detail__actions">
+            <div className="flex gap-[10px] mt-[20px] flex-wrap">
               <button
-                className="book-detail__btn book-detail__btn--download"
+                className="px-[16px] py-[8px] border-0 rounded-[4px] cursor-pointer text-[14px] text-white bg-[#28a745] disabled:opacity-60 disabled:cursor-not-allowed"
                 onClick={() => handleDownload(data)}
                 disabled={isDownloading}
               >
@@ -145,14 +145,14 @@ function BookDetail() {
               </button>
 
               <button
-                className="book-detail__btn book-detail__btn--edit"
+                className="px-[16px] py-[8px] border-0 rounded-[4px] cursor-pointer text-[14px] text-white bg-[#007bff] disabled:opacity-60 disabled:cursor-not-allowed"
                 onClick={() => handleStartEdit(data)}
               >
                 Edit Book
               </button>
 
               <button
-                className="book-detail__btn book-detail__btn--delete"
+                className="px-[16px] py-[8px] border-0 rounded-[4px] cursor-pointer text-[14px] text-white bg-[#dc3545] disabled:opacity-60 disabled:cursor-not-allowed"
                 onClick={handleDelete}
                 disabled={deleteBookMutation.isPending}
               >
@@ -161,13 +161,14 @@ function BookDetail() {
             </div>
           </>
         ) : (
-          <form className="book-detail__form" onSubmit={handleUpdateSubmit}>
-            <h2>Edit Book</h2>
+          <form className="flex flex-col gap-[14px]" onSubmit={handleUpdateSubmit}>
+            <h2 className="mt-0 mb-[8px] text-[20px] font-semibold">Edit Book</h2>
 
-            <div className="form-group">
-              <label>Title</label>
+            <div className="flex flex-col gap-[6px]">
+              <label className="text-[14px] font-semibold">Title</label>
               <input
                 type="text"
+                className="w-full px-[12px] py-[8px] border border-[#cccccc] rounded-[4px] text-[14px] box-border outline-none focus:border-[#007bff]"
                 value={formData.title || ""}
                 onChange={(e) =>
                   setFormData({ ...formData, title: e.target.value })
@@ -176,10 +177,11 @@ function BookDetail() {
               />
             </div>
 
-            <div className="form-group">
-              <label>Author</label>
+            <div className="flex flex-col gap-[6px]">
+              <label className="text-[14px] font-semibold">Author</label>
               <input
                 type="text"
+                className="w-full px-[12px] py-[8px] border border-[#cccccc] rounded-[4px] text-[14px] box-border outline-none focus:border-[#007bff]"
                 value={formData.author || ""}
                 onChange={(e) =>
                   setFormData({ ...formData, author: e.target.value })
@@ -188,10 +190,11 @@ function BookDetail() {
               />
             </div>
 
-            <div className="form-group">
-              <label>Price ($)</label>
+            <div className="flex flex-col gap-[6px]">
+              <label className="text-[14px] font-semibold">Price ($)</label>
               <input
                 type="number"
+                className="w-full px-[12px] py-[8px] border border-[#cccccc] rounded-[4px] text-[14px] box-border outline-none focus:border-[#007bff]"
                 value={formData.price ?? ""}
                 onChange={(e) =>
                   setFormData({ ...formData, price: Number(e.target.value) })
@@ -201,10 +204,11 @@ function BookDetail() {
               />
             </div>
 
-            <div className="form-group">
-              <label>Stock</label>
+            <div className="flex flex-col gap-[6px]">
+              <label className="text-[14px] font-semibold">Stock</label>
               <input
                 type="number"
+                className="w-full px-[12px] py-[8px] border border-[#cccccc] rounded-[4px] text-[14px] box-border outline-none focus:border-[#007bff]"
                 value={formData.stock ?? ""}
                 onChange={(e) =>
                   setFormData({ ...formData, stock: Number(e.target.value) })
@@ -214,9 +218,10 @@ function BookDetail() {
               />
             </div>
 
-            <div className="form-group">
-              <label>Category</label>
+            <div className="flex flex-col gap-[6px]">
+              <label className="text-[14px] font-semibold">Category</label>
               <select
+                className="w-full px-[12px] py-[8px] border border-[#cccccc] rounded-[4px] text-[14px] box-border bg-white outline-none focus:border-[#007bff]"
                 value={formData.category || "Fiction"}
                 onChange={(e) =>
                   setFormData({ ...formData, category: e.target.value })
@@ -233,9 +238,10 @@ function BookDetail() {
               </select>
             </div>
 
-            <div className="form-group">
-              <label>Description</label>
+            <div className="flex flex-col gap-[6px]">
+              <label className="text-[14px] font-semibold">Description</label>
               <textarea
+                className="w-full px-[12px] py-[8px] border border-[#cccccc] rounded-[4px] text-[14px] box-border outline-none focus:border-[#007bff]"
                 value={formData.description || ""}
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
@@ -245,20 +251,20 @@ function BookDetail() {
             </div>
 
             {updateBookMutation.isError && (
-              <p style={{ color: "red" }}>{updateBookMutation.error.message}</p>
+              <p className="text-red-500 text-sm">{updateBookMutation.error.message}</p>
             )}
 
-            <div className="book-detail__form-actions">
+            <div className="flex gap-[10px] mt-[10px] flex-wrap">
               <button
                 type="submit"
-                className="book-detail__btn book-detail__btn--save"
+                className="px-[16px] py-[8px] border-0 rounded-[4px] cursor-pointer text-[14px] text-white bg-[#007bff] disabled:opacity-60 disabled:cursor-not-allowed"
                 disabled={updateBookMutation.isPending}
               >
                 {updateBookMutation.isPending ? "Saving..." : "Save Changes"}
               </button>
               <button
                 type="button"
-                className="book-detail__btn book-detail__btn--cancel"
+                className="px-[16px] py-[8px] border-0 rounded-[4px] cursor-pointer text-[14px] text-white bg-[#6c757d] disabled:opacity-60 disabled:cursor-not-allowed"
                 onClick={() => setIsEditing(false)}
               >
                 Cancel
@@ -279,8 +285,8 @@ function BookDetail() {
   }
 
   return (
-    <div className="book-detail book-detail--masked">
-      <h1>{data.title}</h1>
+    <div className="max-w-[500px] my-[20px] mx-[16px] md:my-[40px] md:mx-auto p-[24px] border border-[#e0e0e0] rounded-[8px] bg-white shadow-[0_4px_12px_rgba(0,0,0,0.05)] box-border">
+      <h1 className="mt-0 mb-2 text-[24px] font-semibold">{data.title}</h1>
       <p>Status: {data.status}</p>
     </div>
   );

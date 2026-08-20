@@ -6,15 +6,13 @@ function LogoutButton() {
   if (!isAuthenticated) return null;
 
   return (
-    <header className="p-4 flex justify-end">
-      <div className="container">
-        <button 
-          onClick={logout} 
-          className="px-4 py-2 bg-red-600 text-white border-none rounded cursor-pointer text-sm hover:bg-red-700 m-2.5"
-        >
-          Logout
-        </button>
-      </div>
+    <header className="p-[16px] flex justify-end box-border">
+      <button
+        onClick={logout}
+        className="px-[16px] py-[8px] bg-[#dc3545] text-white border-0 rounded-[4px] cursor-pointer text-[14px] font-medium hover:bg-[#bd2130] transition-colors"
+      >
+        Logout
+      </button>
     </header>
   );
 }
