@@ -58,59 +58,60 @@ function LoginPage() {
   };
 
   return (
-    <>
-      <form className="login-form" onSubmit={handleLogin}>
-        <div className="login-form__container">
-          <h1 className="login-form__title">Login</h1>
+    <div className="flex justify-center items-center min-h-screen bg-[#f5f5f5] p-4">
+      <form
+        className="bg-white p-8 rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.1)] w-full max-w-[400px] flex flex-col gap-4"
+        onSubmit={handleLogin}
+      >
+        <h1 className="m-0 text-2xl text-center font-semibold">Login</h1>
 
-          <div className="login-form__input-container">
-            <label className="login-form__label">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className="login-form__input"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-semibold">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            className="p-[10px] border border-[#ccc] rounded text-[14px] focus:outline-none focus:border-[#007bff]"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
 
-          <div className="login-form__input-container">
-            <label className="login-form__label">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              className="login-form__input"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-semibold">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            className="p-[10px] border border-[#ccc] rounded text-[14px] focus:outline-none focus:border-[#007bff]"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
 
-          {error && <p style={{ color: "red", fontSize: "14px" }}>{error}</p>}
+        {error && <p className="text-red-500 text-[14px]">{error}</p>}
 
-          <button
-            type="submit"
-            className="login-form__submit-button"
-            disabled={isLoading}
-          >
-            {isLoading ? "Logging in..." : "Login"}
-          </button>
+        <button
+          type="submit"
+          className="p-[12px] bg-[#007bff] text-white border-none rounded text-[16px] cursor-pointer disabled:bg-[#ccc] disabled:cursor-not-allowed"
+          disabled={isLoading}
+        >
+          {isLoading ? "Logging in..." : "Login"}
+        </button>
 
-          <div className="login-form__links">
-            <nav>
-              <Link to="/signup" className="login-form__link">
-                Sign Up
-              </Link>
-            </nav>
-          </div>
+        <div className="text-center">
+          <nav>
+            <Link to="/signup" className="text-[#007bff] text-[14px] hover:underline">
+              Sign Up
+            </Link>
+          </nav>
         </div>
       </form>
-    </>
+    </div>
   );
 }
 
