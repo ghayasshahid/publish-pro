@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { api, downloadBookFile } from "../api";
 import { Modal } from "./Modal";
 import type { BookDetailResponse, Book } from "../types";
+import { useAuth } from "../hooks/useAuth";
 
 function isFullBook(book: BookDetailResponse): book is Book {
   return "price" in book;
@@ -13,6 +14,7 @@ function BookDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Partial<Book>>({});
@@ -33,6 +35,12 @@ function BookDetail() {
     queryKey: ["book", id],
     queryFn: () => api.get(`/api/books/${id}`).then((res) => res.data),
   });
+
+  // Calculate isOwner
+  const isOwner = data && isFullBook(data) && (
+    (typeof data.createdBy === "object" && data.createdBy?._id === user?.id) ||
+    data.createdBy === user?.id
+  );
 
   const deleteBookMutation = useMutation({
     mutationFn: () => api.delete(`/api/books/${id}`),
@@ -104,12 +112,16 @@ function BookDetail() {
 
   if (isFullBook(data)) {
     return (
-      <div className="max-w-[500px] my-[20px] mx-[16px] md:my-[40px] md:mx-auto p-[24px] border border-[#e0e0e0] rounded-[8px] bg-white shadow-[0_4px_12px_rgba(0,0,0,0.05)] box-border">
+      <div className="max-w-lg my-5 mx-4 md:my-10 md:mx-auto p-6 border border-gray-200 rounded-lg bg-white shadow-sm box-border">
         {!isEditing ? (
           <>
-            <h1 className="mt-0 mb-2 text-[24px] font-semibold">{data.title}</h1>
-            <p className="text-[#666666] text-[16px] mb-2">by {data.author}</p>
-            <p className="text-[18px] font-semibold text-[#28a745] mb-2">${data.price}</p>
+            <h1 className="mt-0 mb-2 text-2xl font-semibold text-gray-900">
+              {data.title}
+            </h1>
+            <p className="text-gray-600 text-base mb-2">by {data.author}</p>
+            <p className="text-lg font-semibold text-green-600 mb-2">
+              ${data.price}
+            </p>
             <p className="mb-2">
               <strong>ISBN:</strong> {data.isbn}
             </p>
@@ -119,7 +131,7 @@ function BookDetail() {
             <p className="mb-2">
               <strong>Category:</strong> {data.category}
             </p>
-            <p className="mb-2">{data.description}</p>
+            <p className="mb-2 text-gray-700">{data.description}</p>
             <p className="mb-2">
               <strong>Status:</strong>{" "}
               {data.isAvailable ? "Available" : "Not Available"}
@@ -135,24 +147,26 @@ function BookDetail() {
               </p>
             )}
 
-            <div className="flex gap-[10px] mt-[20px] flex-wrap">
+            <div className="flex gap-2.5 mt-5 flex-wrap">
               <button
-                className="px-[16px] py-[8px] border-0 rounded-[4px] cursor-pointer text-[14px] text-white bg-[#28a745] disabled:opacity-60 disabled:cursor-not-allowed"
+                className="px-4 py-2 border-0 rounded cursor-pointer text-sm text-white bg-green-600 hover:bg-green-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
                 onClick={() => handleDownload(data)}
                 disabled={isDownloading}
               >
                 {isDownloading ? "Downloading..." : "Download Book"}
               </button>
 
-              <button
-                className="px-[16px] py-[8px] border-0 rounded-[4px] cursor-pointer text-[14px] text-white bg-[#007bff] disabled:opacity-60 disabled:cursor-not-allowed"
-                onClick={() => handleStartEdit(data)}
-              >
-                Edit Book
-              </button>
+              {isOwner && (
+                <button
+                  className="px-4 py-2 border-0 rounded cursor-pointer text-sm text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                  onClick={() => handleStartEdit(data)}
+                >
+                  Edit Book
+                </button>
+              )}
 
               <button
-                className="px-[16px] py-[8px] border-0 rounded-[4px] cursor-pointer text-[14px] text-white bg-[#dc3545] disabled:opacity-60 disabled:cursor-not-allowed"
+                className="px-4 py-2 border-0 rounded cursor-pointer text-sm text-white bg-red-600 hover:bg-red-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
                 onClick={handleDelete}
                 disabled={deleteBookMutation.isPending}
               >
@@ -161,14 +175,18 @@ function BookDetail() {
             </div>
           </>
         ) : (
-          <form className="flex flex-col gap-[14px]" onSubmit={handleUpdateSubmit}>
-            <h2 className="mt-0 mb-[8px] text-[20px] font-semibold">Edit Book</h2>
+          <form className="flex flex-col gap-3.5" onSubmit={handleUpdateSubmit}>
+            <h2 className="mt-0 mb-2 text-xl font-semibold text-gray-900">
+              Edit Book
+            </h2>
 
-            <div className="flex flex-col gap-[6px]">
-              <label className="text-[14px] font-semibold">Title</label>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-semibold text-gray-800">
+                Title
+              </label>
               <input
                 type="text"
-                className="w-full px-[12px] py-[8px] border border-[#cccccc] rounded-[4px] text-[14px] box-border outline-none focus:border-[#007bff]"
+                className="w-full px-3 py-2 border border-gray-300 rounded text-sm box-border outline-none focus:border-blue-600"
                 value={formData.title || ""}
                 onChange={(e) =>
                   setFormData({ ...formData, title: e.target.value })
@@ -177,11 +195,13 @@ function BookDetail() {
               />
             </div>
 
-            <div className="flex flex-col gap-[6px]">
-              <label className="text-[14px] font-semibold">Author</label>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-semibold text-gray-800">
+                Author
+              </label>
               <input
                 type="text"
-                className="w-full px-[12px] py-[8px] border border-[#cccccc] rounded-[4px] text-[14px] box-border outline-none focus:border-[#007bff]"
+                className="w-full px-3 py-2 border border-gray-300 rounded text-sm box-border outline-none focus:border-blue-600"
                 value={formData.author || ""}
                 onChange={(e) =>
                   setFormData({ ...formData, author: e.target.value })
@@ -190,11 +210,13 @@ function BookDetail() {
               />
             </div>
 
-            <div className="flex flex-col gap-[6px]">
-              <label className="text-[14px] font-semibold">Price ($)</label>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-semibold text-gray-800">
+                Price ($)
+              </label>
               <input
                 type="number"
-                className="w-full px-[12px] py-[8px] border border-[#cccccc] rounded-[4px] text-[14px] box-border outline-none focus:border-[#007bff]"
+                className="w-full px-3 py-2 border border-gray-300 rounded text-sm box-border outline-none focus:border-blue-600"
                 value={formData.price ?? ""}
                 onChange={(e) =>
                   setFormData({ ...formData, price: Number(e.target.value) })
@@ -204,11 +226,13 @@ function BookDetail() {
               />
             </div>
 
-            <div className="flex flex-col gap-[6px]">
-              <label className="text-[14px] font-semibold">Stock</label>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-semibold text-gray-800">
+                Stock
+              </label>
               <input
                 type="number"
-                className="w-full px-[12px] py-[8px] border border-[#cccccc] rounded-[4px] text-[14px] box-border outline-none focus:border-[#007bff]"
+                className="w-full px-3 py-2 border border-gray-300 rounded text-sm box-border outline-none focus:border-blue-600"
                 value={formData.stock ?? ""}
                 onChange={(e) =>
                   setFormData({ ...formData, stock: Number(e.target.value) })
@@ -218,10 +242,12 @@ function BookDetail() {
               />
             </div>
 
-            <div className="flex flex-col gap-[6px]">
-              <label className="text-[14px] font-semibold">Category</label>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-semibold text-gray-800">
+                Category
+              </label>
               <select
-                className="w-full px-[12px] py-[8px] border border-[#cccccc] rounded-[4px] text-[14px] box-border bg-white outline-none focus:border-[#007bff]"
+                className="w-full px-3 py-2 border border-gray-300 rounded text-sm box-border bg-white outline-none focus:border-blue-600"
                 value={formData.category || "Fiction"}
                 onChange={(e) =>
                   setFormData({ ...formData, category: e.target.value })
@@ -238,10 +264,12 @@ function BookDetail() {
               </select>
             </div>
 
-            <div className="flex flex-col gap-[6px]">
-              <label className="text-[14px] font-semibold">Description</label>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-semibold text-gray-800">
+                Description
+              </label>
               <textarea
-                className="w-full px-[12px] py-[8px] border border-[#cccccc] rounded-[4px] text-[14px] box-border outline-none focus:border-[#007bff]"
+                className="w-full px-3 py-2 border border-gray-300 rounded text-sm box-border outline-none focus:border-blue-600"
                 value={formData.description || ""}
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
@@ -251,20 +279,22 @@ function BookDetail() {
             </div>
 
             {updateBookMutation.isError && (
-              <p className="text-red-500 text-sm">{updateBookMutation.error.message}</p>
+              <p className="text-red-500 text-sm">
+                {updateBookMutation.error.message}
+              </p>
             )}
 
-            <div className="flex gap-[10px] mt-[10px] flex-wrap">
+            <div className="flex gap-2.5 mt-2.5 flex-wrap">
               <button
                 type="submit"
-                className="px-[16px] py-[8px] border-0 rounded-[4px] cursor-pointer text-[14px] text-white bg-[#007bff] disabled:opacity-60 disabled:cursor-not-allowed"
+                className="px-4 py-2 border-0 rounded cursor-pointer text-sm text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
                 disabled={updateBookMutation.isPending}
               >
                 {updateBookMutation.isPending ? "Saving..." : "Save Changes"}
               </button>
               <button
                 type="button"
-                className="px-[16px] py-[8px] border-0 rounded-[4px] cursor-pointer text-[14px] text-white bg-[#6c757d] disabled:opacity-60 disabled:cursor-not-allowed"
+                className="px-4 py-2 border-0 rounded cursor-pointer text-sm text-white bg-gray-500 hover:bg-gray-600 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
                 onClick={() => setIsEditing(false)}
               >
                 Cancel
@@ -285,8 +315,8 @@ function BookDetail() {
   }
 
   return (
-    <div className="max-w-[500px] my-[20px] mx-[16px] md:my-[40px] md:mx-auto p-[24px] border border-[#e0e0e0] rounded-[8px] bg-white shadow-[0_4px_12px_rgba(0,0,0,0.05)] box-border">
-      <h1 className="mt-0 mb-2 text-[24px] font-semibold">{data.title}</h1>
+    <div className="max-w-lg my-5 mx-4 md:my-10 md:mx-auto p-6 border border-gray-200 rounded-lg bg-white shadow-sm box-border">
+      <h1 className="mt-0 mb-2 text-2xl font-semibold">{data.title}</h1>
       <p>Status: {data.status}</p>
     </div>
   );

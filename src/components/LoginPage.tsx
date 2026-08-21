@@ -38,7 +38,7 @@ function LoginPage() {
 
     if (!validatePassword(password)) {
       setError(
-        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number."
+        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.",
       );
       setIsLoading(false);
       return;
@@ -50,7 +50,7 @@ function LoginPage() {
         password,
       });
 
-      login(response.data.accessToken);
+      login(response.data.accessToken, response.data.user);
       navigate("/home");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
@@ -58,24 +58,29 @@ function LoginPage() {
       setIsLoading(false);
     }
   };
-  
+
   return (
-    <div className="flex justify-center items-center min-h-screen bg-white p-[16px] box-border">
+    <div className="flex justify-center items-center min-h-screen bg-neutral-100 p-4 box-border">
       <form
-        className="bg-white p-[32px] rounded-[8px] shadow-[0_4px_12px_rgba(0,0,0,0.1)] w-full max-w-[400px] flex flex-col gap-[16px] box-border"
+        className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm flex flex-col gap-4 box-border"
         onSubmit={handleLogin}
       >
-        <h1 className="m-0 text-[24px] text-center font-normal">Login</h1>
+        <h1 className="m-0 text-2xl text-center font-normal text-gray-900">
+          Login
+        </h1>
 
-        <div className="flex flex-col gap-[6px]">
-          <label htmlFor="email" className="text-[14px] font-semibold">
+        <div className="flex flex-col gap-1.5">
+          <label
+            htmlFor="email"
+            className="text-sm font-semibold text-gray-800"
+          >
             Email
           </label>
           <input
             type="email"
             id="email"
             name="email"
-            className="p-[10px] border border-[#ccc] rounded-[4px] text-[14px] outline-none focus:outline-none focus:border-[#007bff] box-border"
+            className="p-2.5 border border-gray-300 rounded text-sm outline-none focus:border-blue-600 box-border"
             placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -83,15 +88,18 @@ function LoginPage() {
           />
         </div>
 
-        <div className="flex flex-col gap-[6px]">
-          <label htmlFor="password" className="text-[14px] font-semibold">
+        <div className="flex flex-col gap-1.5">
+          <label
+            htmlFor="password"
+            className="text-sm font-semibold text-gray-800"
+          >
             Password
           </label>
           <input
             type="password"
             id="password"
             name="password"
-            className="p-[10px] border border-[#ccc] rounded-[4px] text-[14px] outline-none focus:outline-none focus:border-[#007bff] box-border"
+            className="p-2.5 border border-gray-300 rounded text-sm outline-none focus:border-blue-600 box-border"
             placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -99,11 +107,11 @@ function LoginPage() {
           />
         </div>
 
-        {error && <p className="text-red-500 text-[14px] m-0">{error}</p>}
+        {error && <p className="text-red-500 text-sm m-0">{error}</p>}
 
         <button
           type="submit"
-          className="p-[12px] bg-[#007bff] !text-white border-0 rounded-[4px] text-[16px] cursor-pointer  transition-colors"
+          className="p-3 bg-blue-600 text-white border-0 rounded text-base cursor-pointer hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
           disabled={isLoading}
         >
           {isLoading ? "Logging in..." : "Login"}
@@ -112,7 +120,7 @@ function LoginPage() {
         <div className="text-center">
           <Link
             to="/signup"
-            className="text-[#007bff] text-[14px] no-underline hover:underline"
+            className="text-blue-600 text-sm no-underline hover:underline"
           >
             Don't have an account? Sign Up
           </Link>
