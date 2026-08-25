@@ -18,16 +18,15 @@ function BookList() {
       return api.get(`/api/books?${params.toString()}`).then((res) => res.data);
     },
   });
-
+  
   return (
-    
     <div className="flex flex-col gap-6 w-full box-border">
-      
+      {/* Filters */}
       <div className="flex flex-col md:flex-row gap-3 w-full">
         <input
           type="text"
           placeholder="Search by title or author"
-          className="flex-1 px-3 py-2 border border-[#ccc] rounded text-sm outline-none focus:border-[#007bff] box-border"
+          className="flex-1 px-3 py-2 border border-gray-300 rounded text-sm outline-none focus:border-blue-600 box-border"
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
@@ -36,7 +35,7 @@ function BookList() {
         />
 
         <select
-          className="px-3 py-2 border border-[#ccc] rounded text-sm bg-white outline-none focus:border-[#007bff] box-border min-w-[160px]"
+          className="px-3 py-2 border border-gray-300 rounded text-sm bg-white outline-none focus:border-blue-600 box-border min-w-40"
           value={category}
           onChange={(e) => {
             setCategory(e.target.value);
@@ -65,29 +64,31 @@ function BookList() {
         <p>Loading books...</p>
       ) : (
         <>
-
+          {/* 3-Column Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
             {data?.data.map((book) => (
               <Link
                 to={`/books/${book._id}`}
                 key={book._id}
-                className="p-4 border border-[#e0e0e0] rounded-md bg-white text-inherit no-underline flex flex-col gap-2 box-border hover:border-[#007bff] hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all"
+                className="p-4 border border-gray-200 rounded-md bg-white text-inherit no-underline flex flex-col gap-2 box-border hover:border-blue-600 hover:shadow-sm transition-all"
               >
-                <h3 className="m-0 text-[20px] font-semibold text-gray-900">
+                <h3 className="m-0 text-xl font-semibold text-gray-900">
                   {book.title}
                 </h3>
-                <p className="m-0 text-[#666] text-sm">By {book.author}</p>
-                <p className="m-0 text-[#666] text-sm font-medium">${book.price}</p>
+                <p className="m-0 text-gray-600 text-sm">By {book.author}</p>
+                <p className="m-0 text-gray-600 text-sm font-medium">
+                  ${book.price}
+                </p>
               </Link>
             ))}
           </div>
 
           {data?.data.length === 0 && <p>No books found.</p>}
 
-          
+          {/* Pagination */}
           <div className="flex justify-center items-center gap-4 py-6">
             <button
-              className="px-4 py-2 border border-[#ccc] bg-white rounded cursor-pointer text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 border border-gray-300 bg-white rounded cursor-pointer text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
               disabled={page <= 1}
               onClick={() => setPage((p) => p - 1)}
             >
@@ -97,7 +98,7 @@ function BookList() {
               Page {data?.page} of {data?.pages}
             </span>
             <button
-              className="px-4 py-2 border border-[#ccc] bg-white rounded cursor-pointer text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 border border-gray-300 bg-white rounded cursor-pointer text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
               disabled={data ? page >= data.pages : true}
               onClick={() => setPage((p) => p + 1)}
             >

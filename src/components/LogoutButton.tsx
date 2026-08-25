@@ -6,10 +6,10 @@ function LogoutButton() {
   if (!isAuthenticated) return null;
 
   return (
-    <header className="p-[16px] flex justify-end box-border">
+    <header className="max-w-6xl mx-auto px-6 pt-4 flex justify-end box-border">
       <button
         onClick={logout}
-        className="px-[16px] py-[8px] bg-[#dc3545] text-white border-0 rounded-[4px] cursor-pointer text-[14px] font-medium hover:bg-[#bd2130] transition-colors"
+        className="px-4 py-2 bg-red-600 text-white border-0 rounded cursor-pointer text-sm font-medium hover:bg-red-700 transition-colors"
       >
         Logout
       </button>

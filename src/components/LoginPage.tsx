@@ -60,7 +60,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-neutral-100 p-4 box-border">
+    <div className="flex justify-center items-center min-h-screen bg-white-100 p-4 box-border">
       <form
         className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm flex flex-col gap-4 box-border"
         onSubmit={handleLogin}
@@ -68,7 +68,7 @@ function LoginPage() {
         <h1 className="m-0 text-2xl text-center font-normal text-gray-900">
           Login
         </h1>
-
+        
         <div className="flex flex-col gap-1.5">
           <label
             htmlFor="email"
